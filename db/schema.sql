@@ -10,11 +10,12 @@ create table urls(
 
 create table clicks(
     id serial primary key,
-    short_url varchar(10) references urls(shortened_url),
+    short_url varchar(10),
     clicked_at timestamp default now(),
     referrer text, --where the url was cicked form, if put directly into browser then the value is null
     ip_addrr varchar(50),
-    user_agent text --http header tells browser, device and os
+    user_agent text, --http header tells browser, device and os
+    constraint fk_short_url foreign key (short_url) references urls(shortened_url) on delete cascade 
 );
 
 -- psql -U postgres -d urlshortener -f db/schema.sq

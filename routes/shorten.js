@@ -1,4 +1,5 @@
 const express = require('express');
+const redis = require('../redis');
 const router = express.Router();
 const { nanoid } = require('nanoid');
 const pool = require('../db')
@@ -20,14 +21,15 @@ router.post('/', auth, limiter, async (req, res)=>{
             });
         }
         const exists = await pool.query(
-            'select from urls where shortened_url = $1',[shortCode]
+            'select 1 from urls where shortened_url = $1',[shortCode]
         );
         if(exists.rows.length>0){
             return res.status(409).json({error: 'Alias already taken'});
         }
+        await redis.del(`url:${shortCode}`);
         await pool.query(
             'insert into urls (original_url, shortened_url, is_custom, created_by, expires_at) values ($1, $2, $3, $4, $5)',
-            [url, shortCode, isCustom, req.auth?.name ||'anonymous', expiresAt]
+            [url, shortCode, isCustom, req.user.username ||'anonymous', expiresAt]
         );
         res.json({
             short_url: `${process.env.BASE_URL}/${shortCode}`,
