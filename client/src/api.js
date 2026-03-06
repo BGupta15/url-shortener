@@ -1,6 +1,7 @@
 import axios from 'axios'; //axios was to make http requests
 
-const api = axios.create({baseURL: 'http://localhost:3000'});
+const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:3000'; //locally localhost:3000 handles it, on docker nginx handles it
+const api = axios.create({baseURL});
 
 api.interceptors.request.use((config) => { //inceptors runs everytime before a request is sent any time you do api.get/post/put()
     const token = localStorage.getItem('token'); //jwt token stored after login

@@ -61,7 +61,8 @@ export default function Dashboard() {
   };
 
   const handleCopy = (code) => {
-    const text = `http://localhost:3001/${code}`;
+    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:3000';
+    const text = `${baseUrl}/${code}`;
 
     const textarea = document.createElement('textarea');
     textarea.value = text;

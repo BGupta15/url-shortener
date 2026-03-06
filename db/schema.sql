@@ -1,3 +1,6 @@
+CREATE DATABASE urlshortener;
+\c urlshortener
+
 create table urls(
     id serial primary key,
     original_url text not null, 
