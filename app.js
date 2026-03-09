@@ -18,4 +18,4 @@ app.use('/analytics', require('./routes/analytics'));
 app.use('/', require('./routes/redirect'));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>console.log(`server running on port ${PORT}`));
+app.listen(PORT,'0.0.0.0', ()=>console.log(`server running on port ${PORT}`));
