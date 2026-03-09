@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:3000', //React dev port
+  origin: process.env.CLIENT_URL || 'http://localhost:3000', //React dev port
   credentials: true
 }));
 app.set('trust proxy', 1);
