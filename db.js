@@ -1,10 +1,15 @@
-//connecting to the database
-const { Pool } = require('pg'); //pool manages database connections, doesn't open new connnection everytime(which is very slow and cause crashes), reuses from the pool
-
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-module.exports = pool; //makes pool usuable in other files
+pool.connect()
+  .then(() => console.log('PostgreSQL connected'))
+  .catch((err) => console.error('PostgreSQL connection error:', err.message));
+
+module.exports = pool;
