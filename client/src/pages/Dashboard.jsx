@@ -60,31 +60,28 @@ export default function Dashboard() {
     }
   };
 
-  const handleCopy = (code) => {
-    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:3000';
-    const text = `${baseUrl}/${code}`;
+const handleCopy = (code) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:3000';
+  const text = `${baseUrl}/${code}`;
 
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
 
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
+  try {
+    document.execCommand('copy');
+    setCopied(code);
+    setTimeout(() => setCopied(''), 2000);
+  } catch (err) {
+    alert('Copy failed');
+  }
 
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-
-    try {
-      document.execCommand('copy');
-      setCopied(code);
-      setTimeout(() => setCopied(''), 2000);
-    } catch (err) {
-      alert('Copy failed');
-      console.error(err);
-    }
-
-    document.body.removeChild(textarea);
-  };
+  document.body.removeChild(textarea);
+};
 
   const handleLogout = () => {
     localStorage.clear();
