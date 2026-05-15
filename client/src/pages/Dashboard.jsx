@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
@@ -11,16 +11,16 @@ export default function Dashboard() {
   const navigate  = useNavigate();
   const username  = localStorage.getItem('username') || 'User';
 
-  const loadUrls = async () => {
-    try {
-      const res = await api.get('/urls/mine');
-      setUrls(res.data);
-    } catch (err) {
-      showMsg(err.response?.data?.error || 'Failed to load URLs', 'error');
-    }
-  };
+  const loadUrls = useCallback(async () => {
+  try {
+    const res = await api.get('/urls/mine');
+    setUrls(res.data);
+  } catch (err) {
+    showMsg(err.response?.data?.error || 'Failed to load URLs', 'error');
+  }
+}, []);
 
-  useEffect(() => { loadUrls();}, []);
+  useEffect(() => { loadUrls(); }, [loadUrls]);
 
   const showMsg = (text, type = 'success') => {
     setMsg({ text, type });
