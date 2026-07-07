@@ -36,12 +36,12 @@ router.get('/:code', auth, async (req, res) => {
         );
 
         const timeline = await pool.query(
-            `select date(clicked_at) as date, count(*)::int as clicks
-             from clicks 
-             where short_url = $1
-             group by date(clicked_at)
-             order by date(clicked_at) asc
-             limit 30`,
+            `SELECT DATE_TRUNC('day', clicked_at)::date AS date, COUNT(*) AS clicks
+            FROM clicks
+            WHERE short_url = $1
+            GROUP BY DATE_TRUNC('day', clicked_at)::date
+            ORDER BY date DESC
+            LIMIT 30, count(*)::int as clicks`,
             [code]
         );
 
