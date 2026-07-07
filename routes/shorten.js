@@ -33,7 +33,7 @@ router.post('/', auth, limiter, async (req, res)=>{
         );
         res.json({
             short_url: `${process.env.BASE_URL}/${shortCode}`,
-            shortCode: shortCode,
+            shortened_url: shortCode,
             original_url: url,
             is_custom: isCustom
         });
