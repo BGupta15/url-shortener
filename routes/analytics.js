@@ -41,7 +41,7 @@ router.get('/:code', auth, async (req, res) => {
             WHERE short_url = $1
             GROUP BY DATE_TRUNC('day', clicked_at)::date
             ORDER BY date DESC
-            LIMIT 30, count(*)::int as clicks`,
+            LIMIT 30`,
             [code]
         );
 
