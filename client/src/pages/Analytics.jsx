@@ -7,16 +7,26 @@ import {
 import api from '../api';
 
 export default function Analytics() {
-  const { code }              = useParams();
-  const [data, setData]       = useState(null);
-  const [error, setError]     = useState('');
-  const navigate              = useNavigate();
+  const { code }          = useParams();
+  const [data, setData]   = useState(null);
+  const [error, setError] = useState('');
+  const navigate          = useNavigate();
 
   useEffect(() => {
     api.get(`/analytics/${code}`)
       .then(res => setData(res.data))
       .catch(() => setError('Could not load analytics for this link'));
   }, [code]);
+
+  const formatDate = (dateStr) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const formattedTimeline = (data?.clicks_over_time || []).map(row => ({
+    date: formatDate(row.date),
+    clicks: parseInt(row.clicks)
+  }));
 
   if (error) return (
     <div className="page-wrapper">
@@ -80,7 +90,7 @@ export default function Analytics() {
             </div>
             <div className="analytics-stat">
               <div className="analytics-stat-value" style={{ color: 'var(--warn)' }}>
-                {data.clicks_over_time?.length || 0}
+                {formattedTimeline.length}
               </div>
               <div className="analytics-stat-label">Days Tracked</div>
             </div>
@@ -89,9 +99,9 @@ export default function Analytics() {
 
         <div className="card">
           <div className="chart-title">Clicks Over Time — Last 30 Days</div>
-          {data.clicks_over_time?.length > 0 ? (
+          {formattedTimeline.length > 0 ? (
             <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={data.clicks_over_time}>
+              <LineChart data={formattedTimeline}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#9ca3af' }} />
                 <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} />
